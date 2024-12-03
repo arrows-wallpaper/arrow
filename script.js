@@ -193,7 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="decrease-qty text-[#1e3a8a] hover:text-[#1e4598] font-bold px-2">-</button>
                 <input type="number" class="qty-input w-16 text-center border border-[#e7edf3] rounded-md" value="${quantity}">
                 <button class="increase-qty text-[#1e3a8a] hover:text-[#1e4598] font-bold px-2">+</button>
-                <button class="save-qty bg-[#1e3a8a] hover:bg-[#1e4598] text-white px-2 py-1 rounded-md ml-2">Save</button>
+                <button 
+                    class="save-quantity-btn bg-[#1e3a8a] hover:bg-[#1e4598] text-white px-4 py-1 rounded-md ml-2" 
+                    data-pattern-id="${patternCode}"
+                >Save</button>
             </div>
         `;
     };
@@ -254,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Add event listeners for quantity controls
                 const decreaseBtn = resultCard.querySelector('.decrease-qty');
                 const increaseBtn = resultCard.querySelector('.increase-qty');
-                const saveBtn = resultCard.querySelector('.save-qty');
+                const saveBtn = resultCard.querySelector('.save-quantity-btn');
                 const qtyInput = resultCard.querySelector('.qty-input');
 
                 decreaseBtn.addEventListener('click', () => {
@@ -267,15 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 increaseBtn.addEventListener('click', () => {
                     let currentValue = parseInt(qtyInput.value);
                     qtyInput.value = currentValue + 1;
-                });
-
-                saveBtn.addEventListener('click', () => {
-                    const newQuantity = parseInt(qtyInput.value);
-                    if (isNaN(newQuantity) || newQuantity < 0) {
-                        alert('Please enter a valid quantity.');
-                        return;
-                    }
-                    updatePatternQuantity(foundKey, newQuantity);
                 });
             }
 
@@ -311,4 +305,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Ensure that the admin link is set up correctly
     setupAdminLink();
+
+    // In your existing save quantity button event listener
+    document.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('save-quantity-btn')) {
+            const button = e.target;
+            const patternId = button.dataset.patternId;
+            const quantityInput = button.parentElement.querySelector('.qty-input');
+            const newQuantity = parseInt(quantityInput.value);
+
+            if (isNaN(newQuantity) || newQuantity < 0) {
+                alert('Please enter a valid quantity.');
+                return;
+            }
+
+            try {
+                // Disable the button while saving
+                button.disabled = true;
+                
+                // First update the database
+                await database.ref('patterns/' + patternId).set(newQuantity);
+                
+                // After successful save, update the UI
+                button.style.backgroundColor = '#22c55e';
+                button.textContent = 'Saved!';
+                
+                // Update the wallpaperPatterns object
+                wallpaperPatterns[patternId] = newQuantity;
+                
+                // Reset button after 1 second
+                setTimeout(() => {
+                    button.style.backgroundColor = '#1e3a8a';
+                    button.textContent = 'Save';
+                    button.disabled = false;
+                }, 1000);
+
+            } catch (error) {
+                console.error("Error updating quantity:", error);
+                alert('Error updating quantity');
+                button.disabled = false;
+            }
+        }
+    });
+
+    // Add this near the top of your script.js file with other event listeners
+    document.getElementById('refresh-button').addEventListener('click', () => {
+        location.reload();
+    });
 });
