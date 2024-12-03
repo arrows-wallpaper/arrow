@@ -3,6 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Arrows Wallpaper">
+    <meta name="application-name" content="Arrows Wallpaper">
+    <meta name="description" content="Arrows Wallpaper Pattern Search">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
     <link
       rel="stylesheet"
@@ -32,8 +42,16 @@
               <a class="text-[#0e141b] text-sm font-medium leading-normal" href="#">Inspiration</a>
               <a class="text-[#0e141b] text-sm font-medium leading-normal" href="#">Help</a>
             </div>
-            <div class="flex items-center admin-link-container">
+            <div class="flex items-center gap-4">
+              <button 
+                id="refresh-button" 
+                class="text-white bg-[#1e3a8a] hover:bg-[#1e4598] font-bold text-sm px-4 py-1.5 rounded-lg transition-colors duration-200"
+              >
+                Refresh
+              </button>
+              <div class="flex items-center admin-link-container">
                 <a href="#" class="text-[#1e3a8a] hover:text-[#1e4598] font-bold text-sm transition-colors duration-200">Admin?</a>
+              </div>
             </div>
           </div>
         </header>
